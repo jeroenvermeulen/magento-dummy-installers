@@ -1,19 +1,21 @@
 #!/usr/bin/env php
 <?php
 
+define('CATEGORY_FILE', __DIR__.'/treefile-category.txt');
+
 // env config
 ini_set('display_errors', 1);
 umask(0);
 
 // mage setup
-require_once dirname(__FILE__).'/../app/Mage.php';
+require_once __DIR__.'/../app/Mage.php';
 Mage::app()->setCurrentStore(Mage_Core_Model_App::ADMIN_STORE_ID);
 
-
 // open the tree file
-if (!$handle = fopen("treefile-category.txt", "r"))
-	die('Failed to open file');
-
+$filename = $_SERVER['argv'][1] ?: CATEGORY_FILE; // you can specify the file to import as commandline parameter
+if (!$handle = fopen($filename,"r")) {  
+	die(sprintf('Failed to open file: %s', $filename));
+}
 
 // process tree
 $last_offsets = 0;
